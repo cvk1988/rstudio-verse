@@ -5,9 +5,9 @@ on:
     branches: main 
   pull_request:
     branches: main
-  schedule:
+  #schedule:
     # Runs "at minute 55 past every hour" (see https://crontab.guru)
-    - cron: "55 * * * *"   
+   # - cron: "30 2 * * 7"   
 jobs:
   main:
     runs-on: ubuntu-latest
@@ -29,7 +29,7 @@ jobs:
           context: latest
           file: latest/Dockerfile
           push: true
-          tags: cyversevice/rstudio-verse:latest
+          tags: docker.io/cvk1988/rstudio-verse:latest
       -
         name: Build and Push v4.2.0
         id: docker_build_four_two_zero
@@ -38,7 +38,7 @@ jobs:
           context: 4.2.0
           file: lastest/Dockerfile
           push: true
-          tags: cyversevice/rstudio-verse:4.2.0     
+          tags: docker.io/cvk1988/rstudio-verse:4.2.0     
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
