@@ -8,6 +8,7 @@ on:
   schedule:
     # Runs "at minute 55 past every hour" (see https://crontab.guru)
     - cron "55 * * * *"
+    
 jobs:
   main:
     runs-on: ubuntu-latest
