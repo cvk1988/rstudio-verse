@@ -1,4 +1,4 @@
-FROM rocker/verse:4.1.2
+FROM rocker/verse:latest
 # This image uses the Rocker-Project verse RStudio image - thanks R OpenSci and Rocker!
 
 # Build-time metadata as defined at http://label-schema.org
@@ -6,38 +6,18 @@ ARG BUILD_DATE
 ARG VCS_REF
 ARG VERSION
 LABEL org.label-schema.build-date=$BUILD_DATE \
-      org.label-schema.name="CyVerse RStudio verse" \
+      org.label-schema.name="CVK1988" \
       org.label-schema.description="Built from Rocker-Project RStudio Verse, additional depends for CyVerse K8s workbench" \
       org.label-schema.url="https://cyverse.org" \
       org.label-schema.vcs-ref=$VCS_REF \
-      org.label-schema.vcs-url="e.g. https://github.com/cyverse-vice/rstudio-verse" \
+      org.label-schema.vcs-url="e.g. https://github.com/cvk1988/rstudio-verse" \
       org.label-schema.vendor="CyVerse" \
       org.label-schema.version=$VERSION \
       org.label-schema.schema-version="1.0.0"
 
-MAINTAINER "Tyson Lee Swetnam tswetnam@cyverse.org"
 
 # Install a few dependencies for iCommands, text editing, and monitoring instances
-RUN apt-get update && apt-get install -y lsb-release wget apt-transport-https curl supervisor nginx gnupg2 libfuse2 nano htop gcc less nodejs software-properties-common apt-utils glances
-
-RUN wget -qO - https://packages.irods.org/irods-signing-key.asc | apt-key add - && \
-    echo "deb [arch=amd64] https://packages.irods.org/apt/ bionic main" > /etc/apt/sources.list.d/renci-irods.list && \
-    apt-get update && \
-    wget -c \
-    http://security.ubuntu.com/ubuntu/pool/main/p/python-urllib3/python-urllib3_1.22-1ubuntu0.18.04.2_all.deb \
-    http://security.ubuntu.com/ubuntu/pool/main/r/requests/python-requests_2.18.4-2ubuntu0.1_all.deb \
-    http://security.ubuntu.com/ubuntu/pool/main/o/openssl1.0/libssl1.0.0_1.0.2n-1ubuntu5.7_amd64.deb && \
-    apt install -y \
-    ./python-urllib3_1.22-1ubuntu0.18.04.2_all.deb \
-    ./python-requests_2.18.4-2ubuntu0.1_all.deb \
-    ./libssl1.0.0_1.0.2n-1ubuntu5.7_amd64.deb && \
-    rm -rf \
-    ./python-urllib3_1.22-1ubuntu0.18.04.2_all.deb \
-    ./python-requests_2.18.4-2ubuntu0.1_all.deb \
-    ./libssl1.0.0_1.0.2n-1ubuntu5.7_amd64.deb
-
-RUN apt install -y irods-icommands
-
+RUN apt-get update && apt-get install -y ca-certificates lsb-release wget apt-transport-https curl supervisor nginx gnupg2 libfuse2 nano htop gcc less nodejs software-properties-common apt-utils glances
 # Install GitHub CLI
 RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/etc/apt/trusted.gpg.d/githubcli-archive-keyring.gpg && \
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/trusted.gpg.d/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" > /etc/apt/sources.list.d/github-cli.list && \
@@ -47,7 +27,6 @@ RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | d
 # Add gomplate
 ADD https://github.com/hairyhenderson/gomplate/releases/download/v3.9.0/gomplate_linux-amd64 /usr/bin/gomplate
 RUN chmod a+x /usr/bin/gomplate
-
 
 # provide read and write access to Rstudio users for default R library location
 RUN chmod -R 777 /usr/local/lib/R/site-library
